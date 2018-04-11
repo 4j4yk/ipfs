@@ -1,6 +1,7 @@
 # I P F S 
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/1/18/Ipfs-logo-1024-ice-text.png" style="align:center;">
+<img src="https://upload.wikimedia.org/wikipedia/commons/1/18/Ipfs-logo-1024-ice-text.png" style="align:center;" height="300">
+*img source wikipedia.org*
 
 ## Introduction to IPFS
 
@@ -26,7 +27,7 @@ To make web faster, safer and more open. but how ?
 Look at this [Stanford Seminar - IPFS and the Permanent Web](https://www.youtube.com/watch?v=HUVmypx9HGI)
 
 Or just look here - ![The web](https://ipfs.io/ipfs/QmNhFJjGcMPqpuYfxL62VVB9528NXqDNMFXiqN5bgFYiZ1/images/centralized-decentralized-distributed.jpg "IPFS")
-*Source ipfs.io*
+*img source ipfs.io*
 
 * Centralized 
    - One place stores everything and everyone access the files from this place ! 
@@ -51,7 +52,7 @@ tar xvfz go-ipfs.tar.gz && cd go-ipfs && ./install.sh
 ```
 > For windows `unzip and run ipfs.exe`
     
-* `ipfs help` will list all cmds and subcommands with direction to use, at this point I assume you all are familier with command line utilities like git or any other.
+* `ipfs help` will list all cmds and subcommands with direction to use, at this point I assume you all are familiar with command line utilities like git or any other.
 
 ### Okay , lets dive into ipfs world ! 
 
@@ -66,7 +67,7 @@ mkdir ipfs && cd ipfs && ipfs init
 
 ![init repo](./imgs/initrepo.png)
 
-> ipfs init will initilize the repository similar to `git init`. This generates an RSA keypair and peer identity hash ! files with this peer can be seen using cat cmd
+> ipfs init will initialize the repository similar to `git init`. This generates an RSA keypair and peer identity hash ! files with this peer can be seen using cat cmd
 
 ```bash
 ipfs cat ipfs/hash/name
@@ -88,7 +89,7 @@ If change this file and add it again, we will have two versions of the same file
 ```bash
 echo 'Hello again !' >> hello.txt
 ```
-you can see now we have two different version with different hash indentity.
+you can see now we have two different version with different hash identity.
 
 ![init repo](./imgs/addagain.png)
 
@@ -98,5 +99,56 @@ been changed.
 I will leave it upto you to explore ipfs ls and refs cmds which shows the file list and references and move on to the swarm part !! 
 
 We have added the files to ipfs repo which is local and ready to become a peer in ipfs network.
-    
-### ctd .....
+
+ipfs has a garbage collector, which removes files after 24 hours. So to keep it permanently within your repository you have to pin it !
+
+All the pinned files can be seen using `ipfs pin ls`
+
+![init repo](./imgs/pin.png)
+
+
+#### lets connect to ipfs network
+
+`ipfs daemon` cmd will start ipfs server in your machine
+
+```bash
+ipfs daemon
+```
+* you can start it with logging mode `env ipfslogs=info ipfs daemon`
+
+![init repo](./imgs/daemon.png)
+
+Now when my ipfs is up I can see my online via  public IPFS gateways - 
+ > address would be something like https://ipfs.io/ipfs/QmSiVMsAKohCby7HMENZkoPo4xy46U6AeovT9oR2q13tHE where hash part will be the content hash
+
+![init repo](./imgs/hellotxt.png)
+
+As you can see above it will start a server utilizing your current network addresses. Now see other peers in the network by running - 
+
+```bash
+ipfs swarm peers
+```
+![init repo](./imgs/swarm.png)
+
+Now when your connected to ipfs network how you see it ? Well ipfs has a simple webgui which will show you all the connected nodes ! Yay!! 
+
+visit http://localhost:5001/webui/ in your browser
+
+
+ ![init repo](./imgs/webgui.png)
+ 
+ # Use case - Secure file sharing using IPFS and Public private keys 
+
+ * Setup your keys or use existing keys
+ * Setup IPFS (if you didn't while reading above sections)
+ * Identify a file to be shared securely !!! Or just create one `echo "SuperSecureText" >> securefile.txt`
+ * Encrypt the file with someone else's public key
+ * add to ipfs repository and capture hash
+ * start `ipfs daemon` and share the hash with the audience
+ * They will be able to see it via ipfs public gateway 
+ * person with correct key can decrypt and see content 
+
+ #### ctd .....
+ 
+ * IPNS
+ 
