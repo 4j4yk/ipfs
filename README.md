@@ -137,18 +137,132 @@ visit http://localhost:5001/webui/ in your browser
 
  ![init repo](./imgs/webgui.png)
  
- # Use case - Secure file sharing using IPFS and Public private keys 
+ # Use case - Secure file sharing using IPFS and Public private keys
 
- * Setup your keys or use existing keys
+ * Setup GPG on other machine or any virtual machine as below -
+ 
+ I will create a new set of keys using below commands
+ ```bash 
+ gpg --gen-key
+ ```
+ This after running this command you will be asked your name and email address, as soon as you enter and confirm the keys will be created for you. I created them with some dummy values.
+  ![init repo](./imgs/gpg.png)
+
+Now export your public keys 
+ ```bash 
+ gpg --export --armor -email > namepubkey.asc
+ ```
+  ![init repo](./imgs/export.png)
+
+Pretend this public key is someone else's key and import them in your first machine where you will encrypt file and add to ipfs. 
+```bash
+gpg --import namepubkey.asc
+gpg --list-keys
+```
+
  * Setup IPFS (if you didn't while reading above sections)
+ I already did!!
+
  * Identify a file to be shared securely !!! Or just create one `echo "SuperSecureText" >> securefile.txt`
+  
+  ![init repo](./imgs/txtfile.png)
+
+
  * Encrypt the file with someone else's public key
+
+  ![init repo](./imgs/encrypt.png)
+
  * add to ipfs repository and capture hash
+
+   ![init repo](./imgs/efile.png)
+
+   you can also pin the file using `ipfs pin add filehash` (replace filehash with actual hash)
+
  * start `ipfs daemon` and share the hash with the audience
  * They will be able to see it via ipfs public gateway 
- * person with correct key can decrypt and see content 
+  Like my file is accessible using this link - https://ipfs.io/ipfs/QmeE3Q5KbqgxK6kebaC927jfgKvUB8xY55pbYmNLiL8UxW
 
- #### ctd .....
+  or you can download using `ipfs get hash` (replace hash with actual hash of encrypted file)
+  
+  * Download the file and decrypt it with you private keys 
+
+    ![init repo](./imgs/dfile.png)
+
+ * person with correct key can decrypt and see content
+
+We explored one use case that how we can use ipfs to share encrypted files.
+
+---
  
- * IPNS
- 
+# ipfs for websites (using ipns)
+
+Similar to github, you can also host you website using ipfs !!! cool, isn't it ?
+
+## how to host website ?
+
+Well, you can to create and directory and place all the files in website as you would normally do for uploading a website on server. I will create a folder called mysite and put some files on it.
+
+* I will put an index.html with some text, a css file and a image file inside mysite directory. 
+
+    ![init repo](./imgs/mysite.png)
+        ![init repo](./imgs/mysite1.png)
+
+* I will add the folder and files recursively to ipfs.
+
+    ![init repo](./imgs/ipfswebsite.png)
+
+At the end of logs, you can see that mysite root hash is also generated. 
+
+* using the `mysite` root hash we can see our site content on local/public ipfs gateway. (`ipfs daemon` must be running) 
+
+    ![init repo](./imgs/localsite.png)
+    ![init repo](./imgs/publicsite.png)
+
+Now we can conclude that root hash can act as pointer to your `website root`.
+
+>But who is going to remember the whole hash or keep it saved ? we only know sites by name (i.e. google.com etc.)
+
+We have a way to provide a meaningful name to our website using DNS txt record and `IPNS`.
+
+* I will add the dns record to my domain as below - 
+
+    ![init repo](./imgs/dnstxt.png)
+
+* Now using ipns link on local/public gateway I can see my website with human readable name (`/ipfs.ajaya.me`).
+
+    ![init repo](./imgs/web.png)
+
+## what's the deal with ipns here?
+
+well `ipfs` can publish the new changes to mysite folder by publish command and generate a ipns name for your site and that can be used to resolve your website ipfs content address. (Kind of confusing but yes it works like that and you see difference in screenshots)
+
+```bash
+ipfs name publish sitehash
+```
+
+ ![init repo](./imgs/publish.png)
+
+ Now you get a peer identity for your site and you will use that to address mysite now. 
+
+ ![init repo](./imgs/peernode.png)
+
+ so now the website can be seen with peer id.
+
+ Now we create or new dns record with this peerid and see the web address.
+
+![init repo](./imgs/peernodeweb.png)
+
+*note ipns* in the link 
+
+ ### ipfs based website/examples
+ * [awesome-ipfs](https://github.com/ipfs/awesome-ipfs)
+This list contains many ipfs based applications !! 
+---
+
+# Updates
+TBA
+# License
+[MIT](LICENSE)
+# Contribute
+
+Everyone ! You can help this project/repo in many ways, such as suggestions, reporting issues and contribute in coding/instructions.
